@@ -357,7 +357,7 @@ class DBPull extends Command
 
     public function ssh_get_tables()
     {
-        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"SHOW TABLES\" '", $result);
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"SHOW TABLES\" '", $result);
 
         return $result;
     }
@@ -371,7 +371,7 @@ class DBPull extends Command
 
     public function ssh_ping_mysql()
     {
-        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"SHOW TABLES\" '", $result);
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"SHOW TABLES\" '", $result);
 
         return implode("\n", $result) !== '';
     }
@@ -397,7 +397,7 @@ class DBPull extends Command
     {
         $maxes = [];
         $select = 'select ifnull(max(id), 0) as max_id';
-        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"$select from $table\" '", $result);
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"$select from $table\" '", $result);
         $id = 1 * implode('', $result);
         $maxes = ['id' => $id];
 
@@ -418,7 +418,7 @@ class DBPull extends Command
         }
         if ((count($selects) > 0) && (! $this->option('skip-updates'))) {
             $select = 'select '.implode(', ', $selects);
-            exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"$select from $table where id <= $id\" '", $result);
+            exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"$select from $table where id <= $id\" '", $result);
             if ($result) {
                 foreach (explode("\t", trim($result[0])) as $i => $max) {
                     $maxes[$columns[$i]] = $max;
@@ -431,14 +431,14 @@ class DBPull extends Command
 
     public function ssh_table_count($table)
     {
-        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"select ifnull(count(*), 0) as count from $table\" '", $result);
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"select ifnull(count(*), 0) as count from $table\" '", $result);
 
         return 1 * implode('', $result);
     }
 
     public function ssh_table_dump_new_id_rows($table, $max)
     {
-        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysqldump --defaults-file=/dev/stdin --replace --skip-create-options --skip-add-drop-table --no-create-info -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database $table --where \"id > $max\" ' > ".$this->local_pulls_path.$table.'.sql');
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysqldump --defaults-extra-file=/dev/stdin --replace --skip-create-options --skip-add-drop-table --no-create-info -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database $table --where \"id > $max\" ' > ".$this->local_pulls_path.$table.'.sql');
     }
 
     public function ssh_table_dump_updated_id_rows($table, $justcount)
@@ -470,7 +470,7 @@ class DBPull extends Command
         if (count($wheres) > 0) {
             $where = "id <= $id AND (".implode(' OR ', $wheres).')';
             $select = 'select count(id) as count ';
-            exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"$select from $table where ".addslashes($where)."\" '", $result);
+            exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"$select from $table where ".addslashes($where)."\" '", $result);
             if (! $result) {
                 return 0;
             }
@@ -482,7 +482,7 @@ class DBPull extends Command
                 return $count;
             }
 
-            exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysqldump --defaults-file=/dev/stdin --replace --skip-create-options --skip-add-drop-table --no-create-info -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database $table --where \"".addslashes($where)."\" ' > ".$this->local_pulls_path.$table.'.updates.sql');
+            exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysqldump --defaults-extra-file=/dev/stdin --replace --skip-create-options --skip-add-drop-table --no-create-info -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database $table --where \"".addslashes($where)."\" ' > ".$this->local_pulls_path.$table.'.updates.sql');
 
         }
 
@@ -502,7 +502,7 @@ class DBPull extends Command
             "WHERE a.id < b.id and a.id <= $max ".
             'GROUP BY a.id '.
             'HAVING start < MIN(b.id) ';
-        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"$select\" ' > ".$this->local_pulls_path.$table.'.deletes.sql');
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"$select\" ' > ".$this->local_pulls_path.$table.'.deletes.sql');
         if (file_exists($this->local_pulls_path.$table.'.deletes.sql')) {
             $content = file_get_contents($this->local_pulls_path.$table.'.deletes.sql');
             $deletes = '';
@@ -525,7 +525,7 @@ class DBPull extends Command
 
     public function ssh_table_dump_full($table)
     {
-        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysqldump --defaults-file=/dev/stdin -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database $table' > ".$this->local_pulls_path.$table.'.sql');
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysqldump --defaults-extra-file=/dev/stdin -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database $table' > ".$this->local_pulls_path.$table.'.sql');
     }
 
     public function local_count_migrations()
@@ -552,7 +552,7 @@ class DBPull extends Command
 
     public function local_sql_import($file)
     {
-        exec("$this->local_mysql_auth_echo | mysql --defaults-file=/dev/stdin $this->local_mysql_database < ".$this->local_pulls_path.$file);
+        exec("$this->local_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin $this->local_mysql_database < ".$this->local_pulls_path.$file);
     }
 
     public function has_old_data()
