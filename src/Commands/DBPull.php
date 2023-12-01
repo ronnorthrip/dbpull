@@ -29,47 +29,28 @@ class DBPull extends Command
     protected $description = 'Pull data from a remote mysql database over ssh';
 
     public const SUCCESS = 0;
-
     public const FAILURE = 1;
-
     public const INVALID = 2;
 
     protected $remote_migrations_path = '';
-
     protected $remote_app_path = '';
-
     protected $local_dbpull_file = '';
-
     protected $local_migrations_path = '';
-
     protected $local_pulls_path = '';
-
     protected $skip_tables = ['failed_jobs', 'jobs', 'migrations'];
-
     protected $remote_ssh = '';
-
     protected $remote_mysql_host = '';
-
     protected $remote_mysql_port = '';
-
     protected $remote_mysql_database = '';
-
     protected $remote_mysql_user = '';
-
     protected $remote_mysql_password = '';
-
+    protected $remote_mysql_auth_echo = '';
     protected $local_mysql_database = '';
-
     protected $local_mysql_user = '';
-
     protected $local_mysql_password = '';
-
     protected $from = '';
-
     protected $from_lc = '';
-
     protected $from_uc = '';
-
     protected $data = [];
 
     /**
@@ -119,6 +100,7 @@ class DBPull extends Command
         $this->remote_mysql_user = config('dbpull.'.$this->from.'.username', '');
         $this->remote_mysql_password = config('dbpull.'.$this->from.'.password', '');
         $this->remote_mysql_database = config('dbpull.'.$this->from.'.database', '');
+        $this->remote_mysql_auth_echo = "echo -e \"[client]\nuser=$this->remote_mysql_user\npassword=$this->remote_mysql_password\"";
         if (config('dbpull.config.skip_tables')) {
             $skip_these = explode(',', config('dbpull.config.skip_tables'));
             $skip_these = array_map('trim', $skip_these);
