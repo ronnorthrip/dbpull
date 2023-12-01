@@ -173,8 +173,14 @@ class DBPull extends Command
             return self::FAILURE;
         }
         if ($this->option('ping')) {
-            $this->info('PING! Connect to remote server via ssh worked.');
-
+            $this->info('PING!');
+            $this->info('Connect to remote server via ssh worked.');
+            if ($this->ssh_ping_mysql()) {
+                $this->info('Connect on remote server to database worked.');
+            } else {
+                $this->error('Connect on remote server to database failed.');
+                return self::FAILURE;
+            }
             return self::SUCCESS;
         }
         $full_dump = $this->option('full-dump');
@@ -349,7 +355,7 @@ class DBPull extends Command
 
     public function ssh_get_tables()
     {
-        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"SHOW tables\" '", $result);
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"SHOW TABLES\" '", $result);
 
         return $result;
     }
@@ -357,14 +363,18 @@ class DBPull extends Command
     public function ssh_ping()
     {
         exec("ssh $this->remote_ssh 'whoami'", $result);
+        return implode("\n", $result) !== '';
+    }
 
+    public function ssh_ping_mysql()
+    {
+        exec("ssh $this->remote_ssh '$this->remote_mysql_auth_echo | mysql --defaults-file=/dev/stdin -B -h $this->remote_mysql_host -P $this->remote_mysql_port $this->remote_mysql_database --disable-column-names -e \"SHOW TABLES\" '", $result);
         return implode("\n", $result) !== '';
     }
 
     public function ssh_count_migrations()
     {
         exec("ssh $this->remote_ssh 'ls -1 $this->remote_migrations_path | wc -l'", $result);
-
         return 1 * implode('', $result);
     }
 
