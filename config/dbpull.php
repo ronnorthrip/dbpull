@@ -38,7 +38,7 @@ return [
         'password' => env('DB_PASSWORD'),
         'base_path' => env('DBPULL_LOCAL_BASE_PATH', base_path()),
         'migrations_path' => env('DBPULL_LOCAL_MIGRATIONS_PATH', database_path('migrations')),
-        'pulls_path' => env('DBPULL_LOCAL_PULLS_PATH',database_path('pulls')),
+        'pulls_path' => env('DBPULL_LOCAL_PULLS_PATH', database_path('pulls')),
     ],
 
     /* production */
