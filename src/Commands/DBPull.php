@@ -29,29 +29,51 @@ class DBPull extends Command
     protected $description = 'Pull data from a remote mysql database over ssh';
 
     public const SUCCESS = 0;
+
     public const FAILURE = 1;
+
     public const INVALID = 2;
 
     protected $remote_migrations_path = '';
+
     protected $remote_app_path = '';
+
     protected $local_dbpull_file = '';
+
     protected $local_migrations_path = '';
+
     protected $local_pulls_path = '';
+
     protected $skip_tables = ['failed_jobs', 'jobs', 'migrations'];
+
     protected $remote_ssh = '';
+
     protected $remote_mysql_host = '';
+
     protected $remote_mysql_port = '';
+
     protected $remote_mysql_database = '';
+
     protected $remote_mysql_user = '';
+
     protected $remote_mysql_password = '';
+
     protected $remote_mysql_auth_echo = '';
+
     protected $local_mysql_database = '';
+
     protected $local_mysql_user = '';
+
     protected $local_mysql_password = '';
+
     protected $local_mysql_auth_echo = '';
+
     protected $from = '';
+
     protected $from_lc = '';
+
     protected $from_uc = '';
+
     protected $data = [];
 
     /**
