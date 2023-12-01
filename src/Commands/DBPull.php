@@ -552,8 +552,8 @@ class DBPull extends Command
 
     public function local_sql_import($file)
     {
-        #TODO - this is a hack to get around the mysql auth echo not working
-        # exec("$this->local_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin $this->local_mysql_database < ".$this->local_pulls_path.$file);
+        //TODO - this is a hack to get around the mysql auth echo not working
+        // exec("$this->local_mysql_auth_echo | mysql --defaults-extra-file=/dev/stdin $this->local_mysql_database < ".$this->local_pulls_path.$file);
         exec("mysql -u$this->local_mysql_user -p$this->local_mysql_password $this->local_mysql_database < ".$this->local_pulls_path.$file);
     }
 
