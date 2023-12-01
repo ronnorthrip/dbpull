@@ -48,6 +48,7 @@ class DBPull extends Command
     protected $local_mysql_database = '';
     protected $local_mysql_user = '';
     protected $local_mysql_password = '';
+    protected $local_mysql_auth_echo = '';
     protected $from = '';
     protected $from_lc = '';
     protected $from_uc = '';
@@ -94,6 +95,7 @@ class DBPull extends Command
         $this->local_mysql_user = config('dbpull.local.username', '');
         $this->local_mysql_password = config('dbpull.local.password', '');
         $this->local_mysql_database = config('dbpull.local.database', '');
+        $this->local_mysql_auth_echo = "echo -e \"[client]\nuser=$this->local_mysql_password\npassword=$this->local_mysql_database\"";
         $this->remote_ssh = config('dbpull.'.$this->from.'.ssh', '');
         $this->remote_mysql_host = config('dbpull.'.$this->from.'.host', '');
         $this->remote_mysql_port = config('dbpull.'.$this->from.'.port', '');
@@ -513,7 +515,7 @@ class DBPull extends Command
 
     public function local_sql_import($file)
     {
-        exec("mysql -u$this->local_mysql_user -p$this->local_mysql_password $this->local_mysql_database < ".$this->local_pulls_path.$file);
+        exec("$this->local_mysql_auth_echo | mysql --defaults-file=/dev/stdin $this->local_mysql_database < ".$this->local_pulls_path.$file);
     }
 
     public function has_old_data()
