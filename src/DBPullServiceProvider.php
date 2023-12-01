@@ -2,9 +2,9 @@
 
 namespace RonNorthrip\DBPull;
 
+use RonNorthrip\DBPull\Commands\DBPullCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use RonNorthrip\DBPull\Commands\DBPullCommand;
 
 class DBPullServiceProvider extends PackageServiceProvider
 {
