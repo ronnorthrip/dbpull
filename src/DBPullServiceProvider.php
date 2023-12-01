@@ -2,7 +2,7 @@
 
 namespace RonNorthrip\DBPull;
 
-use RonNorthrip\DBPull\Commands\DBPullCommand;
+use RonNorthrip\DBPull\Commands\DBPull;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -18,8 +18,6 @@ class DBPullServiceProvider extends PackageServiceProvider
         $package
             ->name('dbpull')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_dbpull_table')
-            ->hasCommand(DBPullCommand::class);
+            ->hasCommand(DBPull::class);
     }
 }

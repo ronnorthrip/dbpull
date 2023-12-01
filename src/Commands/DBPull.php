@@ -4,7 +4,7 @@ namespace RonNorthrip\DBPull\Commands;
 
 use Illuminate\Console\Command;
 
-class DBPullCommand extends Command
+class DBPull extends Command
 {
     public $signature = 'dbpull';
 
