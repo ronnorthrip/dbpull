@@ -176,9 +176,9 @@ class DBPull extends Command
             $this->info('PING!');
             $this->info('Connect to remote server via ssh worked.');
             if ($this->ssh_ping_mysql()) {
-                $this->info('Connect on remote server to database worked.');
+                $this->info('Database connection on remote server worked.');
             } else {
-                $this->error('Connect on remote server to database failed.');
+                $this->error('Database connection on remote server failed.');
                 return self::FAILURE;
             }
             return self::SUCCESS;
