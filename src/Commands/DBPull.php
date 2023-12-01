@@ -459,7 +459,7 @@ class DBPull extends Command
         foreach ($columns as $col) {
             if (Schema::hasColumn($table, $col)) {
                 $date = $this->get_old_data($table, $col);
-                if ($date !== null) {
+                if ($date) {
                     $wheres[] = $col.' > "'.$date.'"';
                 }
                 $columns[] = $col;
