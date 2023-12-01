@@ -547,7 +547,12 @@ class DBPull extends Command
 
     public function local_flush_pulls_dir()
     {
-        exec('rm -r '.$this->local_pulls_path.'*');
+        if (!is_dir($this->local_pulls_path)) {
+            return;
+        }
+        if (count(glob($this->local_pulls_path . "*")) > 0) {
+            exec('rm -r '.$this->local_pulls_path.'*');
+        }
     }
 
     public function local_sql_import($file)
