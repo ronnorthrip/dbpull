@@ -21,18 +21,40 @@ You can publish the config file with:
 php artisan vendor:publish --tag=dbpull-config
 ```
 
+
+
+## Usage
+
+The db:pull command pulls the remote database and imports it into your local database. 
+Currently, the command only works with MySQL databases and over passwordless SSH.
+The database is pulled into a temporary file locally in database/pulls and state is persisted in .dbpull.json.
+You should probalby add both of these to your .gitignore.
+
+```bash
+php artisan db:pull
+```
+
+## Config
+
+### Environment Variables
+
+The package is highly configurable, and we've set reasonable defaults where possible. 
+You'll need to at least configure access to your remote database in your .env file.
+
+```php
+DBPULL_PRODUCTION_DB_DATABASE=
+DBPULL_PRODUCTION_DB_USERNAME=
+DBPULL_PRODUCTION_DB_PASSWORD=
+DBPULL_PRODUCTION_SSH=
+```
+
+### Config File
+
 This is the contents of the published config file:
 
 ```php
 return [
 ];
-```
-
-## Usage
-
-```php
-$dBPull = new RonNorthrip\DBPull();
-echo $dBPull->echoPhrase('Hello, RonNorthrip!');
 ```
 
 ## Testing
