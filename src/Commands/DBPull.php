@@ -2,7 +2,6 @@
 
 namespace RonNorthrip\DBPull\Commands;
 
-use App;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
