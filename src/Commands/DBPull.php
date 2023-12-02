@@ -157,7 +157,7 @@ class DBPull extends Command
      */
     public function handle()
     {
-        if (App::environment('production')) {
+        if (config('app.env') == 'production') {
             $this->error('This server IS PRODUCTION. So NOPE.');
 
             return self::INVALID;
