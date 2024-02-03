@@ -303,6 +303,12 @@ class DBPull extends Command
                 if (! $this->option('dry-run')) {
                     $this->ssh_table_dump_full($table);
                 }
+            } elseif ($ssh_table_count === 0) {
+                $action = ($this->option('dry-run')) ? 'Needs' : 'Pulling';
+                $this->info("$action full dump from $table");
+                if (! $this->option('dry-run')) {
+                    $this->ssh_table_dump_full($table);
+                }
             }
         }
 
