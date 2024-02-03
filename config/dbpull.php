@@ -17,7 +17,7 @@ return [
         'snapshot_file' => env('DBPULL_SNAPSHOT_FILE', '.dbpull.json'),
         'default_remote' => env('DBPULL_DEFAULT_REMOTE', 'production'),
         'skip_tables' => env('DBPULL_SKIP_TABLES', 'failed_jobs , jobs , migrations'),
-        'skip_migrations_check' => env('DBPULL_SKIP_MIGRATIONS_CHECCK', false),
+        'skip_migrations_check' => env('DBPULL_SKIP_MIGRATIONS_CHECK', false),
         'ids_only' => env('DBPULL_IDS_ONLY', false),
         'ids_only_tables' => env('DBPULL_IDS_ONLY_TABLES', false),
         'ids_only_tables_prefix' => env('DBPULL_IDS_ONLY_TABLES_PREFIX', false),
