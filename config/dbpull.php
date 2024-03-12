@@ -28,7 +28,7 @@ return [
         'skip_deletes' => env('DBPULL_SKIP_DELETES', false),
         'skip_deletes_tables' => env('DBPULL_SKIP_DELETES_TABLES'),
         'skip_deletes_tables_prefix' => env('DBPULL_SKIP_DELETES_TABLES_PREFIX'),
-        'executables' =>[
+        'executables' => [
             'mysql' => ['cli' => 'mysql', 'dump' => 'mysqldump'],
         ],
     ],
