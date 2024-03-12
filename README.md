@@ -22,7 +22,6 @@ php artisan vendor:publish --tag=dbpull-config
 ```
 
 
-
 ## Usage
 
 The db:pull command pulls the remote database and imports it into your local database. 
