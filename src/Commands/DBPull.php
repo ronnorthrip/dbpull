@@ -20,7 +20,7 @@ class DBPull extends Command
         '{from? : set which database to pull from - defaults to production } '.
         '{--table=* : limit which table or tables to pull } '.
         '{--replace : entirely replace the local data with the pulled data } '.
-        '{--no-skips : dont skip laravel\'s special tables - migrations, jobs, failed_jobs } '.
+        '{--no-table-skips : dont skip any tables when pulling - normally migrations, jobs, failed_jobs } '.
         '{--ping : ping the remote database to verify your connection config } '.
         '{--dry-run : check what changes need to be pulled without executing them } '.
         '{--skip-updates : pull new records using ids without checking for updated rows } '.
@@ -252,7 +252,7 @@ class DBPull extends Command
         $id_tables = [];
         $open_tables = [];
 
-        $no_skips = $full_dump || $this->option('no-skips');
+        $no_skips = $full_dump || $this->option('no-table-skips');
         $skip_tables = ($no_skips) ? [] : $this->skip_tables;
         foreach ($tables as $table) {
             if (! in_array($table, $skip_tables)) {
