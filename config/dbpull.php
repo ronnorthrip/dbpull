@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | This file contains the configuration and credentials used when pulling
-    | database content from a remote mysql database over ssh connections.
+    | database content from a remote database directly or via ssh connections.
     |
     */
 
