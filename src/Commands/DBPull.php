@@ -286,7 +286,7 @@ class DBPull extends Command
                     $this->ssh_table_dump_new_id_rows($table, $max);
                 }
             }
-            if ((!$this->option('skip-updates')) && $this->has_old_data()) {
+            if ((! $this->option('skip-updates')) && $this->has_old_data()) {
                 $action = ($this->option('dry-run')) ? 'Should Update' : 'Updating';
                 $count = $this->ssh_table_dump_updated_id_rows($table, $this->option('dry-run'));
                 if ($count) {
