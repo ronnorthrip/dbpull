@@ -44,6 +44,8 @@ return [
         'base_path' => env('DBPULL_LOCAL_BASE_PATH', base_path()),
         'migrations_path' => env('DBPULL_LOCAL_MIGRATIONS_PATH', database_path('migrations')),
         'pulls_path' => env('DBPULL_LOCAL_PULLS_PATH', database_path('pulls')),
+        'executable_cli' => env('DBPULL_LOCAL_EXECUTABLE_CLI'),
+        'executable_dump' => env('DBPULL_LOCAL_EXECUTABLE_DUMP'),
     ],
 
     /* production */
@@ -57,6 +59,8 @@ return [
         'base_path' => env('DBPULL_PRODUCTION_BASE_PATH'),
         'migrations_path' => env('DBPULL_PRODUCTION_MIGRATIONS_PATH', 'database/migrations'),
         'ssh' => env('DBPULL_PRODUCTION_SSH'),
+        'executable_cli' => env('DBPULL_PRODUCTION_EXECUTABLE_CLI'),
+        'executable_dump' => env('DBPULL_PRODUCTION_EXECUTABLE_DUMP'),
     ],
 
     /* copy the block above to add additional remote source */
