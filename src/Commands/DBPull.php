@@ -16,16 +16,24 @@ class DBPull extends Command
      *
      * @var string
      */
-    protected $signature = 'db:pull {from?} {--table=*} {--replace} '.
-        '{--no-skips} {--ping} {--dry-run} {--skip-updates} {--skip-deletes}'.
-        ' {--force} {--full-dump}';
+    protected $signature = 'db:pull '.
+        '{from? : set which database to pull from - defaults to production } '.
+        '{--table=* : limit which table or tables to pull } '.
+        '{--replace : entirely replace the local data with the pulled data } '.
+        '{--no-skips : dont skip laravel\'s special tables - migrations, jobs, failed_jobs } '.
+        '{--ping : ping the remote database to verify your connection config } '.
+        '{--dry-run : check what changes need to be pulled without executing them } '.
+        '{--skip-updates : pull new records using ids without checking for updated rows } '.
+        '{--skip-deletes : pull new records using ids without checking for deleted rows} '.
+        '{--force : force the pull without compare the migrations or table lists } '.
+        '{--full-dump : perform a full dump from remote replacing local and without skipping anything } ';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Pull data from a remote mysql database over ssh';
+    protected $description = 'Pull data from a remote database - all flags are optional here';
 
     public const SUCCESS = 0;
 
