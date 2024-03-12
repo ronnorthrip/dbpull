@@ -15,6 +15,7 @@ return [
     /* dbpull configuration */
     'config' => [
         'snapshot_file' => env('DBPULL_SNAPSHOT_FILE', '.dbpull.json'),
+        'default_db_type' => env('DBPULL_DEFAULT_DB_TYPE', 'mysql'),
         'default_remote' => env('DBPULL_DEFAULT_REMOTE', 'production'),
         'skip_tables' => env('DBPULL_SKIP_TABLES', 'failed_jobs , jobs , migrations'),
         'skip_migrations_check' => env('DBPULL_SKIP_MIGRATIONS_CHECK', false),
@@ -27,10 +28,14 @@ return [
         'skip_deletes' => env('DBPULL_SKIP_DELETES', false),
         'skip_deletes_tables' => env('DBPULL_SKIP_DELETES_TABLES'),
         'skip_deletes_tables_prefix' => env('DBPULL_SKIP_DELETES_TABLES_PREFIX'),
+        'executables' =>[
+            'mysql' => ['cli' => 'mysql', 'dump' => 'mysqldump'],
+        ],
     ],
 
     /* local - uses the standard laravel envs */
     'local' => [
+        'type' => env('DB_TYPE', env('DBPULL_DEFAULT_DB_TYPE', 'mysql')),
         'host' => env('DB_HOST', '127.0.0.1'),
         'port' => env('DB_PORT', '3306'),
         'database' => env('DB_DATABASE'),
@@ -43,6 +48,7 @@ return [
 
     /* production */
     'production' => [
+        'type' => env('DBPULL_PRODUCTION_DB_TYPE', env('DBPULL_DEFAULT_DB_TYPE', 'mysql')),
         'host' => env('DBPULL_PRODUCTION_DB_HOST', '127.0.0.1'),
         'port' => env('DBPULL_PRODUCTION_DB_PORT', '3306'),
         'database' => env('DBPULL_PRODUCTION_DB_DATABASE'),
