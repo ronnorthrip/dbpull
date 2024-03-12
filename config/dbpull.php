@@ -50,6 +50,7 @@ return [
 
     /* production */
     'production' => [
+        'connection' => env('DBPULL_PRODUCTION_CONNECTION', 'ssh'), // remote or ssh
         'type' => env('DBPULL_PRODUCTION_DB_TYPE', env('DBPULL_DEFAULT_DB_TYPE', 'mysql')),
         'host' => env('DBPULL_PRODUCTION_DB_HOST', '127.0.0.1'),
         'port' => env('DBPULL_PRODUCTION_DB_PORT', '3306'),
