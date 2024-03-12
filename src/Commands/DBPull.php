@@ -281,15 +281,17 @@ class DBPull extends Command
                 }
             } elseif ($ssh_id_max > $max) {
                 $action = ($this->option('dry-run')) ? 'Needs' : 'Pulling';
-                $this->info("$action $diff rows from $table");
+                $this->info("$action $diff new rows from $table");
                 if (! $this->option('dry-run')) {
                     $this->ssh_table_dump_new_id_rows($table, $max);
                 }
             }
-            if ($this->has_old_data()) {
-                $count = $this->ssh_table_dump_updated_id_rows($table, $this->option('dry-run'));
+            if ((!$this->option('skip-updates')) && $this->has_old_data()) {
                 $action = ($this->option('dry-run')) ? 'Should Update' : 'Updating';
-                $this->info("$action $count rows from local $table");
+                $count = $this->ssh_table_dump_updated_id_rows($table, $this->option('dry-run'));
+                if ($count) {
+                    $this->info("$action $count rows from local $table");
+                }
             }
             /* too slow
             if (!$this->option('skip-deletes')) {
