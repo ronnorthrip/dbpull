@@ -26,12 +26,32 @@ php artisan vendor:publish --tag=dbpull-config
 ## Usage
 
 The db:pull command pulls the remote database and imports it into your local database. 
-Currently, the command only works with MySQL databases and over passwordless SSH.
+Currently, the command currently works with MySQL databases and over passwordless SSH.
 The database is pulled into a temporary file locally in database/pulls and state is persisted in .dbpull.json.
 You should add both of these to your .gitignore.
 
 ```bash
 php artisan db:pull
+```
+
+### How It Works
+
+Coming soon.
+
+### Parameters
+
+You can pass additional flags to the command to skip certain steps or alter other behavior.
+
+```php
+--table=*        : limit which table or tables to pull - can be multiple
+--replace        : entirely replace the local data with the pulled data
+--no-table-skips : dont skip any tables when pulling - normally migrations, jobs, failed_jobs
+--ping           : ping the remote database to verify your connection config
+--dry-run        : check what changes need to be pulled without executing them
+--skip-updates   : pull new records using ids without checking for updated rows
+--skip-deletes   : pull new records using ids without checking for deleted rows
+--force          : force the pull without compare the migrations or table lists
+--full-dump      : perform a full dump from remote replacing local and without skipping anything
 ```
 
 ## Config
@@ -48,6 +68,34 @@ DBPULL_PRODUCTION_DB_PASSWORD=
 DBPULL_PRODUCTION_SSH=
 ```
 
+### Multiple Remotes
+
+Duplicate the production config block and give it a different name to add additional remotes, and add the relevant env vars.
+
+```php
+    /* staging */
+    'staging' => [
+        'connection' => env('DBPULL_STAGING_CONNECTION', 'ssh'), // remote or ssh
+        'type' => env('DBPULL_STAGING_DB_TYPE', env('DBPULL_DEFAULT_DB_TYPE', 'mysql')),
+        'host' => env('DBPULL_STAGING_DB_HOST', '127.0.0.1'),
+        'port' => env('DBPULL_STAGING_DB_PORT', '3306'),
+        'database' => env('DBPULL_STAGING_DB_DATABASE'),
+        'username' => env('DBPULL_STAGING_DB_USERNAME'),
+        'password' => env('DBPULL_STAGING_DB_PASSWORD'),
+        'base_path' => env('DBPULL_STAGING_BASE_PATH'),
+        'migrations_path' => env('DBPULL_STAGING_MIGRATIONS_PATH', 'database/migrations'),
+        'ssh' => env('DBPULL_STAGING_SSH'),
+        'executable_cli' => env('DBPULL_STAGING_EXECUTABLE_CLI'),
+        'executable_dump' => env('DBPULL_STAGING_EXECUTABLE_DUMP'),
+    ],
+```
+
+Then when you run the command, you can specify which remote to pull from:
+
+```bash
+php artisan db:pull staging
+```
+
 ### Config File
 
 This is the contents of the published config file:
@@ -61,16 +109,17 @@ return [
     |--------------------------------------------------------------------------
     |
     | This file contains the configuration and credentials used when pulling
-    | database content from a remote mysql database over ssh connections.
+    | database content from a remote database directly or via ssh connections.
     |
     */
 
     /* dbpull configuration */
     'config' => [
         'snapshot_file' => env('DBPULL_SNAPSHOT_FILE', '.dbpull.json'),
+        'default_db_type' => env('DBPULL_DEFAULT_DB_TYPE', 'mysql'),
         'default_remote' => env('DBPULL_DEFAULT_REMOTE', 'production'),
         'skip_tables' => env('DBPULL_SKIP_TABLES', 'failed_jobs , jobs , migrations'),
-        'skip_migrations_check' => env('DBPULL_SKIP_MIGRATIONS_CHECCK', false),
+        'skip_migrations_check' => env('DBPULL_SKIP_MIGRATIONS_CHECK', false),
         'ids_only' => env('DBPULL_IDS_ONLY', false),
         'ids_only_tables' => env('DBPULL_IDS_ONLY_TABLES', false),
         'ids_only_tables_prefix' => env('DBPULL_IDS_ONLY_TABLES_PREFIX', false),
@@ -80,10 +129,14 @@ return [
         'skip_deletes' => env('DBPULL_SKIP_DELETES', false),
         'skip_deletes_tables' => env('DBPULL_SKIP_DELETES_TABLES'),
         'skip_deletes_tables_prefix' => env('DBPULL_SKIP_DELETES_TABLES_PREFIX'),
+        'executables' =>[
+            'mysql' => ['cli' => 'mysql', 'dump' => 'mysqldump'],
+        ],
     ],
 
     /* local - uses the standard laravel envs */
     'local' => [
+        'type' => env('DB_TYPE', env('DBPULL_DEFAULT_DB_TYPE', 'mysql')),
         'host' => env('DB_HOST', '127.0.0.1'),
         'port' => env('DB_PORT', '3306'),
         'database' => env('DB_DATABASE'),
@@ -92,10 +145,14 @@ return [
         'base_path' => env('DBPULL_LOCAL_BASE_PATH', base_path()),
         'migrations_path' => env('DBPULL_LOCAL_MIGRATIONS_PATH', database_path('migrations')),
         'pulls_path' => env('DBPULL_LOCAL_PULLS_PATH', database_path('pulls')),
+        'executable_cli' => env('DBPULL_LOCAL_EXECUTABLE_CLI'),
+        'executable_dump' => env('DBPULL_LOCAL_EXECUTABLE_DUMP'),
     ],
 
     /* production */
     'production' => [
+        'connection' => env('DBPULL_PRODUCTION_CONNECTION', 'ssh'), // remote or ssh
+        'type' => env('DBPULL_PRODUCTION_DB_TYPE', env('DBPULL_DEFAULT_DB_TYPE', 'mysql')),
         'host' => env('DBPULL_PRODUCTION_DB_HOST', '127.0.0.1'),
         'port' => env('DBPULL_PRODUCTION_DB_PORT', '3306'),
         'database' => env('DBPULL_PRODUCTION_DB_DATABASE'),
@@ -104,6 +161,8 @@ return [
         'base_path' => env('DBPULL_PRODUCTION_BASE_PATH'),
         'migrations_path' => env('DBPULL_PRODUCTION_MIGRATIONS_PATH', 'database/migrations'),
         'ssh' => env('DBPULL_PRODUCTION_SSH'),
+        'executable_cli' => env('DBPULL_PRODUCTION_EXECUTABLE_CLI'),
+        'executable_dump' => env('DBPULL_PRODUCTION_EXECUTABLE_DUMP'),
     ],
 
     /* copy the block above to add additional remote source */
