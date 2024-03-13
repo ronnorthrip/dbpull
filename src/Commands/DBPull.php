@@ -17,7 +17,7 @@ class DBPull extends Command
      * @var string
      */
     protected $signature = 'db:pull '.
-        '{from? : set which database to pull from - defaults to production } '.
+        '{from? : set which remote to pull from - defaults to production } '.
         '{--table=* : limit which table or tables to pull } '.
         '{--replace : entirely replace the local data with the pulled data } '.
         '{--no-table-skips : dont skip any tables when pulling - normally migrations, jobs, failed_jobs } '.
