@@ -25,7 +25,7 @@ class DBPull extends Command
         '{--dry-run : check what changes need to be pulled without executing them } '.
         '{--skip-updates : pull new records using ids without checking for updated rows } '.
         '{--skip-deletes : pull new records using ids without checking for deleted rows} '.
-        '{--force : force the pull without compare the migrations or table lists } '.
+        '{--force : force the pull without comparing the migrations or table lists } '.
         '{--full-dump : perform a full dump from remote replacing local and without skipping anything } ';
 
     /**
