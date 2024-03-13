@@ -33,9 +33,22 @@ You should add both of these to your .gitignore.
 php artisan db:pull
 ```
 
+### Compatible Databases
+
+MySQL is the only database currently supported.
+
 ### How It Works
 
-This 
+This package works my keeping a snapshot of the max ids and max timestamps for each table in the remote database in 
+the local .dbpull.json file. When you run the command, it compares the remote database with the snapshot and pulls any 
+records where the id or timestamp is greater than the snapshot values. It does this in two passes, first pulling new 
+records and then updating records. It **WILL SOON** check for deleted records and deletes them locally too.
+
+It was specifically designed to work with large databases and to be able to pull only the records that have changed.
+It's been honed over years of use with databases with millions of records and tons of tables.
+And this approach is much faster than pulling the entire database each time.
+Of course as you dev locally you'll be creating and editing records, so sometimes its helpful to pull a full dump.
+All you have to do is add the **--full-dump** flag to the command to do so.
 
 ### Parameters
 
@@ -67,25 +80,18 @@ DBPULL_PRODUCTION_DB_PASSWORD=
 DBPULL_PRODUCTION_SSH=
 ```
 
-### Multiple Remotes
+### Processing Configuration
+
+### Remote Configuration
+
+### Adding Remotes
 
 Duplicate the production config block and give it a different name to add additional remotes, and add the relevant env vars.
 
 ```php
     /* staging */
     'staging' => [
-        'connection' => env('DBPULL_STAGING_CONNECTION', 'ssh'), // remote or ssh
-        'type' => env('DBPULL_STAGING_DB_TYPE', env('DBPULL_DEFAULT_DB_TYPE', 'mysql')),
-        'host' => env('DBPULL_STAGING_DB_HOST', '127.0.0.1'),
-        'port' => env('DBPULL_STAGING_DB_PORT', '3306'),
-        'database' => env('DBPULL_STAGING_DB_DATABASE'),
-        'username' => env('DBPULL_STAGING_DB_USERNAME'),
-        'password' => env('DBPULL_STAGING_DB_PASSWORD'),
-        'base_path' => env('DBPULL_STAGING_BASE_PATH'),
-        'migrations_path' => env('DBPULL_STAGING_MIGRATIONS_PATH', 'database/migrations'),
-        'ssh' => env('DBPULL_STAGING_SSH'),
-        'executable_cli' => env('DBPULL_STAGING_EXECUTABLE_CLI'),
-        'executable_dump' => env('DBPULL_STAGING_EXECUTABLE_DUMP'),
+        ...
     ],
 ```
 
