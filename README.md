@@ -26,7 +26,7 @@ php artisan vendor:publish --tag=dbpull-config
 
 The db:pull command pulls the remote database and imports it into your local database. 
 Currently, the command currently works with MySQL databases and over passwordless SSH.
-The database is pulled into a temporary file locally in database/pulls and state is persisted in .dbpull.json.
+The database is pulled into a temporary file locally in /database/pulls and state is persisted in .dbpull.json.
 You should add both of these to your .gitignore.
 
 ```bash
