@@ -20,7 +20,6 @@ jobs:
           - laravel: 10.*
             testbench: 8.*
             carbon: ^2.63
-            phpunit: [^9.0, ^10.0]
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
