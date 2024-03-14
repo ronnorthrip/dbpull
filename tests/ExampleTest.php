@@ -1,7 +1,7 @@
 <?php
 
-use RonNorthrip\DBPull\Commands\DBPull;
 use Illuminate\Support\Str;
+use RonNorthrip\DBPull\Commands\DBPull;
 
 it('can figure out the mysql tables key', function () {
     $dbpull = new DBPull();
