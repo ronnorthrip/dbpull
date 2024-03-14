@@ -357,14 +357,15 @@ class DBPull extends Command
     public function local_tables_key()
     {
         $tables = DB::select('SHOW TABLES');
-        return (!$tables)?
+
+        return (! $tables) ?
             null :
             array_keys(get_object_vars($tables[0]))[0];
     }
 
     public function local_get_tables()
     {
-        return (!$this->local_tables_key())?
+        return (! $this->local_tables_key()) ?
             [] :
             Arr::pluck(DB::select('SHOW TABLES'), $this->local_tables_key());
     }
