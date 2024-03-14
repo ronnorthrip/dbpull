@@ -34,7 +34,7 @@ class TestCase extends Orchestra
             'port' => '3306',
             'database' => 'dbpull_test',
             'username' => 'root',
-            'password' => 'password',
+            'password' => '',
         ]);
 
         config()->set('database.default', 'testing');
