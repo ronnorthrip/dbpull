@@ -29,11 +29,11 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         $connection = [
-            'driver' =>   env('DB_CONNECTION','mysql'),
-            'host' =>     env('DB_HOST','127.0.0.1'),
-            'port' =>     env('DB_PORT','3306'),
-            'database' => env('DB_DATABASE','dbpull_test'),
-            'username' => env('DB_USERNAME','root'),
+            'driver' => env('DB_CONNECTION', 'mysql'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'dbpull_test'),
+            'username' => env('DB_USERNAME', 'root'),
         ];
         if (env('DB_PASSWORD')) {
             $connection['password'] = env('DB_PASSWORD');
