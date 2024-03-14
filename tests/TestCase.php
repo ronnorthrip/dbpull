@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
 use RonNorthrip\DBPull\DBPullServiceProvider;
 
+//note: compare to https://github.com/spatie/laravel-backup/blob/main/tests/TestCase.php
+
 class TestCase extends Orchestra
 {
     protected function setUp(): void
@@ -26,6 +28,15 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
+        config()->set('database.connections.testing', [
+            'driver' => 'mysql',
+            'host' => '127.0.0.1',
+            'port' => '3306',
+            'database' => 'dbpull_test',
+            'username' => 'root',
+            'password' => 'password',
+        ]);
+
         config()->set('database.default', 'testing');
 
         /*
